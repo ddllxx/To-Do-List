@@ -1,0 +1,38 @@
+.module {
+    color: darksalmon;
+    background-color: cornsilk;
+}
+
+.title {
+    color: cornflowerblue;
+    background-color: cornsilk;
+}
+
+.finish_yes {
+    color: green;
+    background-color: cornsilk;
+}
+
+.finish_no {
+    color: deeppink;
+    background-color: cornsilk;
+}
+
+.new_todo {
+    font-size: 1.3em;
+    color: darkviolet;
+}
+
+.info_label {
+    color: forestgreen;
+    font-size: 1em;
+}
+
+body {
+    background-image: url("../img/background.png");
+    background-size: cover;
+}
+
+.error {
+    color: red;
+}

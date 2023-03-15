@@ -1,0 +1,153 @@
+{% extends "parent/parent.html" %}
+{% block title %} Main {% endblock %}
+{% block body %}
+<header>
+    <h1 class="m-5 text-md-center font-weight-bold">TODO LIST</h1>
+</header>
+<div class="container">
+    <div class="card h-75 align-items-center mb-3">
+        <div class="container"><h2 class="card-title new_todo">Add New Todo</h2></div>
+        <form id="todoform_add" action="/add" method="get"></form>
+        <div class="container-fluid form-row">
+            <div class="col-sm">
+                <div class="input-group mb-3 mt-3">
+                    <input name="moduleTitle" form="todoform_add" type="text" class="form-control text-nowrap" placeholder="module title">
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="input-group mb-3 mt-3">
+                    <input name="title" form="todoform_add" type="text" class="form-control {{ errFlag['color'] }}" {{ errFlag['tip'] }}="{{ tip['title'] }}">
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="input-group mb-3 mt-3">
+                    <input name="deadline" form="todoform_add" type="text" class="form-control  {{ errFlag['color'] }}" {{ errFlag['tip'] }}="{{ tip['deadline'] }}">
+                </div>
+            </div>
+            <div class="col-sm">
+                <select name="difficulty" form="todoform_add" class="custom-select mb-3 mt-3">
+                    <option value="0">Easy</option>
+                    <option value="1">Middle</option>
+                    <option value="2" selected>Difficult</option>
+                </select>
+            </div>
+            <div class="col-sm">
+                <select name="finish" form="todoform_add" class="custom-select mb-3 mt-3">
+                    <option value="0">NO</option>
+                    <option value="1" selected>YES</option>
+                </select>
+            </div>
+            <div class="col-sm mt-3 text-center">
+                <button class="btn btn-info btn-secondary mb-3" type="button" data-toggle="collapse" data-target="#desc_add">
+                    ▼
+                </button>
+            </div>
+            <div class="w-100"></div>
+            <div class="col collapse" id="desc_add">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Description</span>
+                    </div>
+                    <textarea name="description" form="todoform_add" class="form-control" placeholder="detail"></textarea>
+                    <button type="submit" form="todoform_add" class="btn btn-dark">
+                        Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="align-items-center mb-3">
+        <form action="/all" id="all" method="post"></form>
+        <form action="/finish" id="finish" method="post"></form>
+        <form action="/todo" id="todo" method="post"></form>
+        <form action="/search" id="search" method="get"></form>
+        <div class="input-group mb-3 mt-3">
+            <input type="text" form="search" name="title" class="form-control" placeholder="title">
+            <div class="input-group-append">
+                <button form="search" class="btn btn-secondary" type="submit" id="search button">Search</button>
+            </div>
+        </div>
+        <div class="btn-group" role="group">
+            <button type="button submit" form="all" class="btn btn-secondary">All</button>
+            <button type="button submit" form="finish" class="btn btn-secondary">Finish</button>
+            <button type="button submit" form="todo" class="btn btn-secondary">Todo</button>
+        </div>
+    </div>
+    <div class="card h-75 align-items-center">
+        {% for d in data %}
+        <form id="todoform_{{ d.id }}" action="/change" method="get">
+            <input type="text" hidden value="{{ d.id }}" name="id"/>
+        </form>
+        <div class="form-row container-fluid">
+            <div class="col-sm"> 
+                <label class="info_label" for="module_{{ d.id }}">module</label>
+                <div class="input-group mb-3">
+                    <input id="module_{{ d.id }}" name="moduleTitle" form="todoform_{{ d.id }}" type="text" class="form-control module" value="{{ d.moduleTitle }}">
+                </div>
+            </div>
+            <div class="col-sm">
+                <label class="info_label" for="title_{{ d.id }}">title</label>
+                <div class="input-group mb-3">
+                    <input id="title_{{ d.id}}" name="title" form="todoform_{{ d.id }}" type="text" class="form-control title" value="{{ d.title }}">
+                </div>
+            </div>
+            <div class="col-sm">
+                <label class="info_label" for="deadline_{{ d.id }}">deadline</label>
+                <div class="input-group mb-3">
+                    {% if d.danger == True %}
+                    <input id="deadline_{{ d.id }}" name="deadline" form="todoform_{{ d.id }}" type="text" class="form-control bg-danger" value="{{ d.deadline }}">
+                    {% else %}
+                    <input id="deadline_{{ d.id }}" name="deadline" form="todoform_{{ d.id }}" type="text" class="form-control bg-warning" value="{{ d.deadline }}">
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-sm">
+                <label class="info_label" for="finish_{{ d.id }}">difficulty</label>
+                <select id="difficult_{{ d.id }}" name="difficulty" form="todoform_{{ d.id }}" class="custom-select mb-3 finish_yes">
+                    <option value="0">Easy</option>
+                    {% if d.difficulty == "middle" %}
+                    <option value="1" selected>Middle</option>
+                    {% else %}
+                    <option value="1"> Middle </option>
+                    {% endif %}
+                    {% if d.difficulty == "difficult" %}
+                    <option value="2" selected >Difficult</option>
+                    {% else %}
+                    <option value="2">Difficult</option>
+                    {% endif %}
+                </select>
+            </div>
+            <div class="col-sm">
+                <label class="info_label" for="finish_{{ d.id }}">finish</label>
+                <select id="finish_{{ d.id }}" name="finish" form="todoform_{{ d.id }}" class="custom-select mb-3 finish_yes">
+                    <option value="0">NO</option>
+                    {% if d.finish == "yes" %}
+                    <option value="1" selected >YES</option>
+                    {% else %}
+                    <option value="1">YES</option>
+                    {% endif %}
+                </select>
+            </div>
+            <div class="col-sm mt-3 text-center">
+                <button class="btn btn-info btn-secondary mb-3" type="button" data-toggle="collapse" data-target="#desc{{ d.id }}">
+                    ▼
+                </button>
+            </div>
+            <div class="w-100"></div>
+            <div class="col-sm collapse" id="desc{{ d.id }}">
+                <div class="input-group pb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Description</span>
+                    </div>
+                    <textarea name="description" form="todoform_{{ d.id }}" class="form-control">{{ d.description }}</textarea>
+                    <div class="btn-group" role="group">
+                        <button type="button" form="todoform_{{ d.id }}" class="btn btn-secondary bg-primary" onclick="click_commit(this)">Modify</button>
+                        <button type="button" form="todoform_{{ d.id }}" class="btn btn-secondary bg-danger" onclick="click_commit(this)">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
